@@ -13,7 +13,7 @@ public class Endereco {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    private Usuario usuario;
+    private Empresa empresa;
     @NotBlank
     private String logradouro;
     @NotBlank

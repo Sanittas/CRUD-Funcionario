@@ -1,1 +1,0 @@
-insert into usuario (nome, email, cpf, senha) values ('Alek', 'alek@gamil.com', '39956707848', '123456');

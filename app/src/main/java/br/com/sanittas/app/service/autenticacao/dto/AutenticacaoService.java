@@ -1,7 +1,7 @@
 package br.com.sanittas.app.service.autenticacao.dto;
 
-import br.com.sanittas.app.model.Usuario;
-import br.com.sanittas.app.repository.UsuarioRepository;
+import br.com.sanittas.app.model.Empresa;
+import br.com.sanittas.app.repository.EmpresaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,17 +13,17 @@ import java.util.Optional;
 public class AutenticacaoService implements UserDetailsService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private EmpresaRepository empresaRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<Usuario> usuarioOpt = usuarioRepository.findByEmail(username);
+        Optional<Empresa> empresaOpt = empresaRepository.findByCnpj(username);
 
-        if (usuarioOpt.isEmpty()) {
+        if (empresaOpt.isEmpty()) {
 
             throw new UsernameNotFoundException(String.format("usuario %s não encontrado", username));
         }
-        return new UsuarioDetalhesDto(usuarioOpt.get());
+        return new EmpresaDetalhesDto(empresaOpt.get());
     }
 }

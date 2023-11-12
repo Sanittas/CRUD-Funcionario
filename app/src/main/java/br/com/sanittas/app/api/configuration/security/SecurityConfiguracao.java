@@ -47,10 +47,7 @@ public class SecurityConfiguracao {
             new AntPathRequestMatcher("/error/**"),
             new AntPathRequestMatcher("/actuator/*"),
             new AntPathRequestMatcher("/api/public/**"),
-            new AntPathRequestMatcher("/api/public/authenticate"),
-            new AntPathRequestMatcher("/usuarios/login/**"),
-            new AntPathRequestMatcher("/usuarios/cadastrar/")
-
+            new AntPathRequestMatcher("/api/public/authenticate")
     };
 
     @Bean
