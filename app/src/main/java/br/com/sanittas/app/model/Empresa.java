@@ -20,12 +20,12 @@ public class Empresa {
     private String razaoSocial;
     @CNPJ
     private String cnpj;
-
     @Email
     private String email;
-
     private String senha;
     @OneToMany(mappedBy = "empresa", orphanRemoval = true)
     private List<Endereco> enderecos = new ArrayList<>();
+    @OneToMany(mappedBy = "empresa", orphanRemoval = true)
+    private List<ServicoEmpresa> servicos;
 
 }
