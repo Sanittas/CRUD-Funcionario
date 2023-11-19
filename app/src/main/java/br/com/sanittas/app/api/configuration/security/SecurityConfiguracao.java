@@ -127,5 +127,4 @@ public class SecurityConfiguracao {
 
         return origem;
     }
-
 }
