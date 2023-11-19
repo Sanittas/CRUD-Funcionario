@@ -13,8 +13,6 @@ import org.hibernate.validator.constraints.br.CPF;
 @Getter
 @Setter
 public class FuncionarioCriacaoDto {
-
-    private int id;
     @NotBlank
     private String funcional;
     @NotBlank
@@ -26,8 +24,6 @@ public class FuncionarioCriacaoDto {
     private String rg;
     @Email
     private String email;
-    @NotBlank
-    private String senha;
     @NotBlank
     private String numeroRegistroAtuacao;
 }

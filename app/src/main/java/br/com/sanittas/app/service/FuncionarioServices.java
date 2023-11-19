@@ -34,8 +34,6 @@ public class FuncionarioServices {
     @Autowired
     private EmpresaRepository empresaRepository;
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
     private GerenciadorTokenJwt gerenciadorTokenJwt;
@@ -57,7 +55,6 @@ public class FuncionarioServices {
                 funcionario.getCpf(),
                 funcionario.getRg(),
                 funcionario.getEmail(),
-                funcionario.getSenha(),
                 funcionario.getNumeroRegistroAtuacao(),
                 funcionario.getIdEmpresa()
         );
@@ -72,7 +69,6 @@ public class FuncionarioServices {
             funcionario.get().setCpf(dados.getCpf());
             funcionario.get().setRg(dados.getRg());
             funcionario.get().setEmail(dados.getEmail());
-            funcionario.get().setSenha(dados.getSenha());
             funcionario.get().setNumeroRegistroAtuacao(dados.getNumeroRegistroAtuacao());
 
             ListaFuncionarioAtualizacao FuncionarioDto = new ListaFuncionarioAtualizacao(
@@ -82,7 +78,6 @@ public class FuncionarioServices {
                     funcionario.get().getCpf(),
                     funcionario.get().getRg(),
                     funcionario.get().getEmail(),
-                    funcionario.get().getSenha(),
                     funcionario.get().getNumeroRegistroAtuacao()
             );
             repository.save(funcionario.get());
@@ -106,34 +101,10 @@ public class FuncionarioServices {
         return funcionario.get();
     }
 
-    public EmpresaTokenDto autenticar(EmpresaLoginDto empresaLoginDto) {
-        log.info("Autenticando empresa com CNPJ: {}", empresaLoginDto.cnpj());
-        final UsernamePasswordAuthenticationToken credentials = new UsernamePasswordAuthenticationToken(
-                empresaLoginDto.cnpj(), empresaLoginDto.senha());
-
-        final Authentication authentication = this.authenticationManager.authenticate(credentials);
-
-        Empresa empresaAutenticada =
-                empresaRepository.findByCnpj(empresaLoginDto.cnpj())
-                        .orElseThrow(
-                                () -> new ResponseStatusException(404, "CNPJ não cadastrado", null)
-                        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        final String jwtToken = gerenciadorTokenJwt.gerarToken(authentication);
-
-        log.info("Autenticação bem-sucedida para empresa com CNPJ: {}", empresaLoginDto.cnpj());
-
-        return EmpresaMapper.of(empresaAutenticada, jwtToken);
-    }
-
-    public void cadastrar(FuncionarioCriacaoDto funcionarioCriacaoDto) {
+    public void cadastrar(FuncionarioCriacaoDto funcionarioCriacaoDto, String token) {
+        final Empresa empresa = empresaRepository.findByCnpj(gerenciadorTokenJwt.getUsernameFromToken(token)).get();
         final Funcionario novoFuncionario = FuncionarioMapper.of(funcionarioCriacaoDto);
-
-        String senhaCriptografada = passwordEncoder.encode(novoFuncionario.getSenha());
-        novoFuncionario.setSenha(senhaCriptografada);
-
+        novoFuncionario.setIdEmpresa(empresa);
         repository.save(novoFuncionario);
     }
 

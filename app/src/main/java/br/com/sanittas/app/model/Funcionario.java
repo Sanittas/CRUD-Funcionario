@@ -29,8 +29,6 @@ public class Funcionario {
     @Email
     private String email;
     @NotBlank
-    private String senha;
-    @NotBlank
     private String numeroRegistroAtuacao;
     @ManyToOne
     private Empresa idEmpresa;

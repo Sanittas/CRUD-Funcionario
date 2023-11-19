@@ -8,13 +8,16 @@ import br.com.sanittas.app.service.autenticacao.dto.EmpresaTokenDto;
 import br.com.sanittas.app.service.funcionario.dto.FuncionarioCriacaoDto;
 import br.com.sanittas.app.service.funcionario.dto.ListaFuncionario;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @SecurityRequirement(name = "bearer-key")
@@ -23,15 +26,6 @@ import java.util.List;
 public class FuncionarioController {
     @Autowired
     private FuncionarioServices services;
-
-
-    @PostMapping("/autenticar")
-    public ResponseEntity<EmpresaTokenDto> login(@RequestBody EmpresaLoginDto empresaLoginDto) {
-        log.info("Recebida solicitação de login para empresa: {}", empresaLoginDto.cnpj());
-        EmpresaTokenDto empresaTokenDto = services.autenticar(empresaLoginDto);
-        log.info("Login bem-sucedido para empresa: {}", empresaLoginDto.cnpj());
-        return ResponseEntity.status(200).body(empresaTokenDto);
-    }
     @GetMapping("/")
     public ResponseEntity<List<ListaFuncionario>> listar() {
         try{
@@ -51,23 +45,28 @@ public class FuncionarioController {
     @GetMapping("/{id}")
     public ResponseEntity<?> buscar(@PathVariable Integer id) {
         try{
-            var usuario = services.buscar(id);
-            log.info("Funcionario encontrado" + usuario);
-            return ResponseEntity.status(200).body(usuario);
+            var funcionario = services.buscar(id);
+            log.info("Funcionario encontrado" + funcionario);
+            return ResponseEntity.status(200).body(funcionario);
         }catch (Exception e){
-            log.info("Funcionario não encontrado" + e.getLocalizedMessage());
-            return ResponseEntity.status(400).body(e.getMessage());
+            log.info("Funcionario não encontrado");
+            return ResponseEntity.status(400).build();
         }
     }
 
     @PostMapping("/")
-    public ResponseEntity<Void> cadastrar(@RequestBody @Valid FuncionarioCriacaoDto dados) {
+    public ResponseEntity<Void> cadastrar(@RequestBody @Valid FuncionarioCriacaoDto dados, HttpServletRequest request) {
         try{
-            services.cadastrar(dados);
+            String requestTokenHeader = request.getHeader("Authorization");
+            String jwtToken = "";
+            if (Objects.nonNull(requestTokenHeader) && requestTokenHeader.startsWith("Bearer ")) {
+                jwtToken = requestTokenHeader.substring(7);
+            }
+            services.cadastrar(dados,jwtToken);
             log.info("Funcionario cadastrado");
             return ResponseEntity.status(201).build();
         }catch (Exception e){
-            log.error("Erro ao cadastrar funcionario", e.getLocalizedMessage());
+            log.error("Erro ao cadastrar funcionario. Exceção:" + e.getLocalizedMessage());
             return ResponseEntity.status(400).build();
         }
     }

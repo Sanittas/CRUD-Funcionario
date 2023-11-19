@@ -22,7 +22,6 @@ public class ListaFuncionario {
     private String cpf;
     private String rg;
     private String email;
-    private String senha;
     private String numeroRegistroAtuacao;
     private Empresa idEmpresa;
 }

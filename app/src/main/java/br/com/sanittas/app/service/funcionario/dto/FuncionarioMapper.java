@@ -12,7 +12,6 @@ public class FuncionarioMapper {
         funcionario.setCpf(funcionarioCriacaoDto.getCpf());
         funcionario.setRg(funcionarioCriacaoDto.getRg());
         funcionario.setEmail(funcionarioCriacaoDto.getEmail());
-        funcionario.setSenha(funcionarioCriacaoDto.getSenha());
         funcionario.setNumeroRegistroAtuacao(funcionarioCriacaoDto.getNumeroRegistroAtuacao());
 
 
