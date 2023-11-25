@@ -94,4 +94,21 @@ public class FuncionarioController {
             return ResponseEntity.status(404).build();
         }
     }
+
+    @GetMapping("/empresa/{id}")
+    public ResponseEntity<List<ListaFuncionario>> listarPorEmpresa(@PathVariable Integer id) {
+        try{
+            var response = services.listaFuncionariosPorEmpresa(id);
+            if (!response.isEmpty()){
+                log.info("Funcionarios encontrados" + response);
+                return ResponseEntity.status(200).body(response);
+            }
+            log.info("Nenhum funcionario encontrado");
+            return ResponseEntity.status(204).build();
+        }catch (Exception e) {
+            log.error("Erro ao buscar funcionarios", e.getLocalizedMessage());
+            throw new RuntimeException(e.getLocalizedMessage());
+        }
+    }
+
 }

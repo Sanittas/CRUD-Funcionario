@@ -47,6 +47,16 @@ public class FuncionarioServices {
         return listaFunc;
     }
 
+    public List<ListaFuncionario> listaFuncionariosPorEmpresa(Integer idEmpresa) {
+        var funcionarios = repository.findAllWithIdEmpresa(idEmpresa);
+        List<ListaFuncionario> listaFunc = new ArrayList<>();
+        for (Funcionario funcionario : funcionarios) {
+            criarDtoFuncionarios(funcionario, listaFunc);
+        }
+        return listaFunc;
+
+    }
+
     private static void criarDtoFuncionarios(Funcionario funcionario,  List<ListaFuncionario> listaFuncionarios) {
         var funcionarioDto = new ListaFuncionario(
                 funcionario.getId(),

@@ -1,0 +1,1 @@
+INSERT INTO empresa(razao_social,email,cnpj,senha) VALUES ('paulo','paulo@gmail.com','60701190000104','$2a$10$vtvgl8ujHK/8PeXmRvv3POtH8iTxgXZBfW2oCBge1qnh7fL.POzfC');
